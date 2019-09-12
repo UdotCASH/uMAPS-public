@@ -102,7 +102,6 @@ var positions
 	var lastRead = localStorage.getItem("lastRead");
 	console.log(lastUpdated,lastRead)
 
-	hashes = JSON.parse(localStorage.getItem("hashes"))
 	converters = JSON.parse(localStorage.getItem("converters"))
 
 	if(converters==null){
@@ -119,6 +118,7 @@ var positions
 	}
     await fetchConverters()
     await fetchCoords()
+		await fetchHashes()
 		await populateMarkers()
 
 }
@@ -153,6 +153,7 @@ async function addConverter(){
 }
 
 async function populateMarkers(){
+
 	markers = new Array()
   console.log(converters)
   console.log(coords)
@@ -177,14 +178,7 @@ console.log(converters)
 numConverters = converters.length;
 console.log(numConverters)
 
-try{
-	hashes = JSON.parse(localStorage.getItem("hashes"))
-		if(hashes==null){
-			hashes = new Array()
-		}
-} catch {
-	hashes = new Array()
-}
+
 
 try{
 	positions = JSON.parse(localStorage.getItem("positions"))
@@ -217,6 +211,10 @@ async function createMarker(t) {
 		catch{
 			verifiedHash = ""
 		}
+		console.log(t)
+		console.log(verifiedHash)
+		console.log(hashes[t])
+
 
     var LatLng = {lat: parseFloat(coords[t][0]), lng: parseFloat(coords[t][1])};
 
@@ -235,6 +233,7 @@ async function createMarker(t) {
 			} else {
 				UCASHT.innerText = "Unverified Converter"
 			}
+
 
 				let name = converters[t][0]
 				var nameT = document.createElement("p")   //name Text
@@ -329,131 +328,8 @@ async function createMarker(t) {
 
 }
 
-async function getContractData(){
-	console.log("aaa")
-
-
-	let converters = new Array()
-	// for(t = 0;t<numConverters;t++){
-	// 	let converter = await contract.converters(t)
-	// 	// let location = converter._address
-	// 	// let name = converter.name
-	// 	// let telegram = converter.telegram
-	// 	converters.push(converter)
-	// }
-localStorage.setItem("lastRead", Date.now())
-
-	return new Promise(function(resolve) {
-
-		setTimeout(resolve, 0);
-    });
-}
-
-async function Upload() {
-
-	let Converters = new Array()
-	let Hashes = new Array()
-	positions = new Array()
-
-			var csvUpload = document.getElementById("csvUpload");
-			var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
- 			if (regex.test(csvUpload.value.toLowerCase())) {
-
-				// if (typeof (FileReader) != "undefined") {
-				// 	var reader = new FileReader();
-				// 	reader.onload = function (e) {
-				// 	var table = document.createElement("table");
-				// 	var rows = e.target.result.split("\n");
-				// 	for (var i = 0; i < rows.length; i++) {
-				// 			var row = table.insertRow(-1);
-				// 			var cells = rows[i].split(",");
-				// 		for (var j = 0; j < cells.length; j++) {
-				// 			var cell = row.insertCell(-1);
-				// 			cell.innerHTML = cells[j];
-				// 		}
-				// 	}
-				// 	var dvCSV = document.getElementById("dvCSV");
-				// 	dvCSV.innerHTML = "";
-				// 	dvCSV.appendChild(table);
-				localStorage.setItem("converters","")
-				if (typeof (FileReader) != "undefined") {
-					var reader = new FileReader();
-					reader.onload = function (e) {
-					var rows = e.target.result.split("\n");
-					tnum = rows.length
-
-					var cells = rows[1].split(",");
-
-					let types = new Array()
-					for (var j = 0; j < cells.length; j++) {
-								var cell = cells[j];
-								types.push(cell)
-							}
-
-							for(let r=2;r<tnum-1;r++){
-								var cells;
-
-								setTimeout(function(){
-
-									console.log(r)
-									cells = rows[r].split(",");
-									let converter = new Array()
-											console.log(cells)
-											for (var j = 0; j < cells.length; j++) {
-														var cell = cells[j];
-														converter.push(cell)
-											 		}
-											let hash = utils.solidityKeccak256(types,converter)
-											Converters.push(converter)
-											Hashes.push(hash)
-
-											let location = converter[12] + " "
-											 + converter[13] + " , "
-											 + converter[15] + " , "
-											 + converter[16] + " , "
-											 + converter[18]
-
-											 geocoder.geocode( { 'address': location}, function(results, status) {
-										 			positions[r] = results[0].geometry.location
-													console.log(location)
-													localStorage.setItem("converters",JSON.stringify(Converters))
-													localStorage.setItem("hashes",JSON.stringify(Hashes))
-													localStorage.setItem("positions",JSON.stringify(positions))
-										 		})
-								}, 1000*r);
-						}
-						console.log(Converters)
-						console.log(Hashes)
-
-
-
-
-		}
-
-		reader.readAsText(csvUpload.files[0]);
-
-		} else {
-			alert("This browser does not support HTML5.");
-		}
-		} else {
-			alert("Please upload a valid CSV file.");
-		}
-
-}
 
 async function geocodeTHIS(location, i) {
-
-}
-
-async function addConverters() {
-
-	let overrides = {
-		gasLimit:4000000
-	}
-
-	hashes = JSON.parse(localStorage.getItem("hashes"))
-
-	await contract.addConverters(hashes,overrides)
 
 }
 

@@ -25,6 +25,15 @@ async function fetchCoords(){
 		});
 }
 
+async function fetchHashes(){
+  var xhttp = createCORSRequest('GET', server + "/hashes");
+  await sendRequest(xhttp,"hashes")
+  return new Promise(function(resolve) {
+
+    setTimeout(resolve, 0);
+    });
+}
+
 async function sendRequest(xhttp,requestType){
   if (!xhttp) {
     throw new Error('CORS not supported');
@@ -36,6 +45,8 @@ async function sendRequest(xhttp,requestType){
    converters = JSON.parse(responseText)
  } else if(requestType=="coords"){
    coords=JSON.parse(responseText)
+ } else if(requestType=="hashes"){
+   hashes=JSON.parse(responseText)
  }
    // process the response.
   };

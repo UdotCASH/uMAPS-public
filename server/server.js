@@ -120,7 +120,7 @@ fs.readFile('../msb3.csv', function read(err, data) {
         }
 
         let hash = utils.solidityKeccak256(types,converter)
-
+				hashes.push(hash)
 
         let location = converter[12] + " "
          + converter[13] + " , "
@@ -189,71 +189,6 @@ async function initialize() {
  }
 }
 
-async function Upload() {
-
-	let Converters = new Array()
-	let Hashes = new Array()
-	positions = new Array()
-
-			var csvUpload = document.getElementById("csvUpload");
-			var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
- 			if (regex.test(csvUpload.value.toLowerCase())) {
-
-				localStorage.setItem("converters","")
-				if (typeof (FileReader) != "undefined") {
-					var reader = new FileReader();
-					reader.onload = function (e) {
-					var rows = e.target.result.split("\n");
-					tnum = rows.length
-
-					var cells = rows[1].split(",");
-
-					let types = new Array()
-					for (var j = 0; j < cells.length; j++) {
-								var cell = cells[j];
-								types.push(cell)
-							}
-
-							for(let r=2;r<tnum-1;r++){
-								var cells;
-
-								setTimeout(function(){
-
-									cells = rows[r].split(",");
-									let converter = new Array()
-											for (var j = 0; j < cells.length; j++) {
-														var cell = cells[j];
-														converter.push(cell)
-											 		}
-											let hash = utils.solidityKeccak256(types,converter)
-											Converters.push(converter)
-											Hashes.push(hash)
-
-											let location = converter[12] + " "
-											 + converter[13] + " , "
-											 + converter[15] + " , "
-											 + converter[16] + " , "
-											 + converter[18]
-
-											 geocoder.geocode( { 'address': location}, function(results, status) {
-										 			positions[r] = results[0].geometry.location
-													localStorage.setItem("converters",JSON.stringify(Converters))
-													localStorage.setItem("hashes",JSON.stringify(Hashes))
-													localStorage.setItem("positions",JSON.stringify(positions))
-										 		})
-								}, 1000*r);
-						}
-		}
-
-		reader.readAsText(csvUpload.files[0]);
-
-		} else {
-			alert("This browser does not support HTML5.");
-		}
-		} else {
-			alert("Please upload a valid CSV file.");
-		}
-}
 
 //
 // upload csv
@@ -298,7 +233,9 @@ const requestHandler = (request, response) => {
 					response.end(JSON.stringify(converters))
 			} else if(requestSplit[0]=="/coords"){
 					response.end(JSON.stringify(coords))
-			}else {
+			} else if(requestSplit[0]=="/hashes"){
+					response.end(JSON.stringify(hashes))
+			} else {
 
 		response.writeHead(200, headers);
 		response.end(" method is not allowed for the request.")
