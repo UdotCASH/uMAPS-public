@@ -114,6 +114,7 @@ var positions
 
 
     await fetchConverters()
+
     await fetchCoords()
 		await fetchHashes()
 		await populateMarkers()
@@ -150,14 +151,15 @@ async function addConverter(){
 }
 
 async function populateMarkers(){
-
+	console.log("begin populate markers")
 	markers = new Array()
   console.log(converters)
   console.log(coords)
+	console.log(hashes)
   await createMarkers()
 	console.log(markers)
 	await createMarkerCluster()
-
+	console.log("end populate markers")
 }
 
 async function createMarkerCluster(){
@@ -200,7 +202,11 @@ async function createMarker(t) {
 		let verifiedHash
 
 		try{
+			if(t<40){
 			verifiedHash = await contract.converters(t)
+		} else {
+			verifiedHash = ""
+		}
 		}
 
 		catch{

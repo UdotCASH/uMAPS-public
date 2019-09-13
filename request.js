@@ -1,36 +1,43 @@
 var server = "https://gentle-peak-60588.herokuapp.com"
 
-function testRequest(from, to) {
+async function testRequest(from, to) {
 
   var params = "?" + "from=" + from.toString() + "&to=" + to.toString()
-   var xhttp = createCORSRequest('GET', server + "/one" + params);
-   sendRequest(xhttp)
+   var xhttp = await createCORSRequest('GET', server + "/one" + params);
+   await sendRequest(xhttp)
 }
 
 async function fetchConverters(){
-  var xhttp = createCORSRequest('GET', server + "/converters");
+  var xhttp = await createCORSRequest('GET', server + "/converters");
   await sendRequest(xhttp,"converters")
   return new Promise(function(resolve) {
 
 		setTimeout(resolve, 0);
+
 		});
+
 }
 
 async function fetchCoords(){
-  var xhttp = createCORSRequest('GET', server + "/coords");
+
+  var xhttp = await createCORSRequest('GET', server + "/coords");
   await sendRequest(xhttp,"coords")
   return new Promise(function(resolve) {
 
 		setTimeout(resolve, 0);
+
 		});
 }
 
 async function fetchHashes(){
-  var xhttp = createCORSRequest('GET', server + "/hashes");
+
+  var xhttp = await createCORSRequest('GET', server + "/hashes");
   await sendRequest(xhttp,"hashes")
   return new Promise(function(resolve) {
 
     setTimeout(resolve, 0);
+
+
     });
 }
 
@@ -44,10 +51,11 @@ async function sendRequest(xhttp,requestType){
    if(requestType=="converters"){
    converters = JSON.parse(responseText)
  } else if(requestType=="coords"){
-   coords=JSON.parse(responseText)
+   coords= JSON.parse(responseText)
  } else if(requestType=="hashes"){
-   hashes=JSON.parse(responseText)
+   hashes=  JSON.parse(responseText)
  }
+
    // process the response.
   };
 
@@ -60,7 +68,8 @@ async function sendRequest(xhttp,requestType){
 
     return new Promise(function(resolve) {
 
-      setTimeout(resolve, 0);
+      setTimeout(resolve, 200);
+
       });
 }
 
@@ -88,5 +97,11 @@ function createCORSRequest(method, url) {
     xhr = null;
 
   }
-  return xhr;
+
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(xhr);
+    }, 200);
+  });
+
 }
