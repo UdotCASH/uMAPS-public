@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script charset="utf-8"
         src="https://cdn.ethers.io/scripts/ethers-v4.min.js"
         type="text/javascript">
@@ -32,16 +33,41 @@
     </style>
   </head>
   <body>
-    <div id="map"></div>
-    <script>
-
-    </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB44HX2j9N8qwDlC8cseF-HrfnDWFAlvbw&callback=initMap"
- type="text/javascript"></script>
+     type="text/javascript"></script>
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#">Converter</a>
+  <a href="#">Services</a>
+  <a href="#">Hours</a>
+  <a href="#">Contact</a>
+</div>
 
- <script>
+<!-- Use any element to open the sidenav -->
+<span onclick="openNav()">open</span>
 
- </script>
+<!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+
+
+<div id="map">
+</div>
+
+<script>
+/* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+  document.getElementById("map").style.marginLeft = "250px";
+}
+
+/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("map").style.marginLeft = "0";
+}
+</script>
+
+
+
   </body>
 
 </html>

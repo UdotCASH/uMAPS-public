@@ -112,10 +112,7 @@ var positions
 		hashes = new Array()
 	}
 
-	if(lastUpdated*1000>lastRead||lastRead==null){
-		console.log("getcontractData")
-		await getContractData()
-	}
+
     await fetchConverters()
     await fetchCoords()
 		await fetchHashes()
@@ -177,8 +174,6 @@ console.log(converters)
 
 numConverters = converters.length;
 console.log(numConverters)
-
-
 
 try{
 	positions = JSON.parse(localStorage.getItem("positions"))
