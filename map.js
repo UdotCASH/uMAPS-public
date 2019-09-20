@@ -115,11 +115,9 @@ if(lastRead<lastUpdated||lastRead=="null"){
 }
 
     await fetchConverters()
-
     await fetchCoords()
 		await fetchHashes()
 		await populateMarkers()
-
 }
 
   function initMap() {
@@ -301,7 +299,10 @@ async function createMarker(t) {
 			markers.push(marker)
 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.open(map,markers[t]);
+				populateSidePanel(t)
 			});
+
+
 
 
 
@@ -311,6 +312,22 @@ async function createMarker(t) {
 		setTimeout(resolve, 0);
 		});
 
+}
+
+function populateSidePanel(converter){
+document.getElementById("mySidenav").innerHTML = ""
+
+	console.log(converter)
+	let abc = document.createElement("div")
+
+	for(var s = 21;s<28;s++){
+	var Day = document.createElement("p")
+	Day.innerText = converters[converter][s]
+	abc.appendChild(Day)
+
+}
+
+	document.getElementById("mySidenav").appendChild(abc)
 }
 
 
