@@ -88,6 +88,8 @@ var numConverters
 var markers
 var positions
 
+var verifiedHashes
+
 
  async function initialize() {
 
@@ -98,20 +100,19 @@ var positions
 	contract = new ethers.Contract(contractAddress, contractABI, provider);
 
 	let lastUpdated = await contract.lastUpdated()
-	lastUpdated = lastUpdated.toNumber()
+	lastUpdated = lastUpdated.toNumber()*1000
 	var lastRead = localStorage.getItem("lastRead");
-	console.log(lastUpdated,lastRead)
+	console.log(lastUpdated,parseInt(lastRead))
 
-	converters = JSON.parse(localStorage.getItem("converters"))
-
-	if(converters==null){
-		converters = new Array()
+if(lastRead<lastUpdated||lastRead=="null"){
+	console.log("getContractData")
+	await getContractData()
+} else {
+	verifiedHashes = JSON.parse(localStorage.getItem("verifiedHashes"))
+	if(verifiedHashes==null){
+		verifiedHashes = new Array()
 	}
-
-	if(hashes==null){
-		hashes = new Array()
-	}
-
+}
 
     await fetchConverters()
 
@@ -153,11 +154,7 @@ async function addConverter(){
 async function populateMarkers(){
 	console.log("begin populate markers")
 	markers = new Array()
-  console.log(converters)
-  console.log(coords)
-	console.log(hashes)
   await createMarkers()
-	console.log(markers)
 	await createMarkerCluster()
 	console.log("end populate markers")
 }
@@ -171,11 +168,7 @@ async function createMarkerCluster(){
 async function createMarkers(){
 	let t;
 
-
-console.log(converters)
-
 numConverters = converters.length;
-console.log(numConverters)
 
 try{
 	positions = JSON.parse(localStorage.getItem("positions"))
@@ -202,19 +195,10 @@ async function createMarker(t) {
 		let verifiedHash
 
 		try{
-			if(t<40){
-			verifiedHash = await contract.converters(t)
-		} else {
+			verifiedHash = verifiedHashes[t]
+		} catch {
 			verifiedHash = ""
 		}
-		}
-
-		catch{
-			verifiedHash = ""
-		}
-		console.log(t)
-		console.log(verifiedHash)
-		console.log(hashes[t])
 
 
     var LatLng = {lat: parseFloat(coords[t][0]), lng: parseFloat(coords[t][1])};
@@ -347,7 +331,6 @@ function teste() {
 function testCSV() {
 	let longs = new Array()
 
-
 	let rows = new Array()
 	rows.push(["lat","lng"])
 	rows.push(["string","string"])
@@ -360,9 +343,22 @@ function testCSV() {
 
 	}
 
-
 let csvContent = "data:text/csv;charset=utf-8,"
     + rows.map(e => e.join(",")).join("\n");
 var encodedUri = encodeURI(csvContent);
 window.open(encodedUri);
+}
+
+async function getContractData(){
+	verifiedHashes = new Array()
+
+	let numHashes = await contract.numConverters()
+
+	for (var l = 0;l<numHashes;l++){
+		console.log(l)
+		verifiedHashes.push(await contract.converters(l))
+	}
+
+	localStorage.setItem("verifiedHashes",JSON.stringify(verifiedHashes))
+	localStorage.setItem("lastRead",Date.now());
 }
