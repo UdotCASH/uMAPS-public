@@ -314,15 +314,19 @@ async function createMarker(t) {
 
 }
 
+var days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 function populateSidePanel(converter){
 document.getElementById("mySidenav").innerHTML = ""
 
 	console.log(converter)
 	let abc = document.createElement("div")
+	var Hours = document.createElement("p")
+	Hours.innerText = "Converter Hours"
+	abc.appendChild(Hours)
 
-	for(var s = 21;s<28;s++){
+	for(var s = 0;s < 7;s++){
 	var Day = document.createElement("p")
-	Day.innerText = converters[converter][s]
+	Day.innerText = days[s] + ": " + converters[converter][s+21]
 	abc.appendChild(Day)
 
 }
