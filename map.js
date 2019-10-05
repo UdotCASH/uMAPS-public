@@ -90,13 +90,12 @@ var positions
 
 var verifiedHashes
 
+var coll = document.getElementsByClassName("collapsible"); //Collapsible Hours Element
 
  async function initialize() {
 
   provider = ethers.getDefaultProvider('rinkeby');
-
   utils = ethers.utils;
-
 	contract = new ethers.Contract(contractAddress, contractABI, provider);
 
 	let lastUpdated = await contract.lastUpdated()
@@ -134,18 +133,15 @@ var toronto = {lat: 43.7, lng: -79.41};
     });
 
     //var marker = new google.maps.Marker({position: uluru, map: map});
-
   }
 
 async function addConverter(){
 
 	var name = document.getElementById('name').value;
-
   var address = document.getElementById('address').value;
 	var telegram = document.getElementById('telegram').value;
 
   await contract.addConverter(name,address,telegram);
-
 
 }
 
@@ -315,23 +311,91 @@ async function createMarker(t) {
 }
 
 var days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+
 function populateSidePanel(converter){
 document.getElementById("mySidenav").innerHTML = ""
 
-	console.log(converter)
-	let abc = document.createElement("div")
+	let imageInfo = document.createElement("img")
+	imageInfo.src = converters[converter][30]
+	imageInfo.style ="width:80%;"
+	document.getElementById("mySidenav").appendChild(imageInfo)
+
+	let nameInfo = document.createElement("div")
+	nameInfo.innerText = converters[converter][0]
+	document.getElementById("mySidenav").appendChild(nameInfo)
+
+	let hoursInfo = document.createElement("div")
 	var Hours = document.createElement("p")
+	Hours.classList.add("collapsible")
 	Hours.innerText = "Converter Hours"
-	abc.appendChild(Hours)
 
-	for(var s = 0;s < 7;s++){
-	var Day = document.createElement("p")
-	Day.innerText = days[s] + ": " + converters[converter][s+21]
-	abc.appendChild(Day)
+	var dt = new Date()
+	var dayNo = dt.getDay()
+	var hour = dt.getHours()
+	var minute = dt.getMinutes()
+	var availability
 
-}
+	for(var t = 0;t < 7;t++){
+		let s
+		s = (t+dayNo-1)%7
+		var Day = document.createElement("p")
+		Day.innerText = days[s] + ": " + converters[converter][s+21]
+		hoursInfo.appendChild(Day)
+	}
 
-	document.getElementById("mySidenav").appendChild(abc)
+	//TODO: manage timezones
+	var hS = converters[converter][dayNo + 21] //hours String
+	var split1 = hS.split(" ")
+
+	var tz = split1[1]
+
+	console.log(hS)
+	console.log("Reras")
+	switch(hS){
+		case "Closed":
+			availability = "Closed"
+			break;
+		case "Appointment Only":
+			availability = "Appointment Only"
+			break;
+		default:
+			let hSArray = hS.split("-")
+			var open = hSArray[0]
+			var closed = hSArray[1]
+			console.log(open)
+			console.log(closed)
+
+	}
+
+
+
+	hoursInfo.classList.add("content")
+	Hours.appendChild(hoursInfo)
+	collapseHours(Hours,hoursInfo);
+	document.getElementById("mySidenav").appendChild(Hours)
+
+	let addressInfo = document.createElement("div")
+	addressInfo.innerText = converters[converter][12] + " " + converters[converter][13]
+	document.getElementById("mySidenav").appendChild(addressInfo)
+
+	let phoneInfo = document.createElement("a")
+	phoneInfo.innerText = converters[converter][1]
+	phoneInfo.href = "tel:+" + converters[converter][1]
+	document.getElementById("mySidenav").appendChild(phoneInfo)
+
+	let websiteInfo = document.createElement("div")
+	websiteLink = document.createElement("a")
+	websiteLink.target = "_blank"
+	websiteLink.innerText = converters[converter][2]
+	websiteLink.href = "http://www." + converters[converter][2]
+	document.getElementById("mySidenav").appendChild(websiteLink)
+
+
+
+
+
+
+
 }
 
 
@@ -339,14 +403,12 @@ async function geocodeTHIS(location, i) {
 
 }
 
-function teste() {
-
+function test() {
 	for(let r=0;r<100;r++){
 		setTimeout(function(){
 			console.log(r)
 		}, 1000*r);
-}
-
+	}
 }
 
 function testCSV() {
@@ -382,4 +444,19 @@ async function getContractData(){
 
 	localStorage.setItem("verifiedHashes",JSON.stringify(verifiedHashes))
 	localStorage.setItem("lastRead",Date.now());
+}
+
+
+function collapseHours(HoursElement,content){
+	console.log(HoursElement)
+	console.log(content)
+  HoursElement.addEventListener("click", function() {
+    this.classList.toggle("active");
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+
 }

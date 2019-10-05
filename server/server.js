@@ -94,7 +94,7 @@ let converters = new Array();
 let coords = new Array();
 let hashes = new Array();
 
-fs.readFile('./msb3.csv', function read(err, data) {
+fs.readFile('../MSBList.csv', function read(err, data) {
 
     if (err) {
         throw err;
@@ -135,7 +135,7 @@ fs.readFile('./msb3.csv', function read(err, data) {
 
 });
 
-fs.readFile('./coords.csv', function read(err, data) {
+fs.readFile('../coords.csv', function read(err, data) {
 
     if (err) {
         throw err;
