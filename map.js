@@ -206,7 +206,7 @@ async function createMarker(t) {
 
 				var UCASHT = document.createElement("p")
 				infoNode.appendChild(UCASHT)
-
+				console.log(hashes)
 				if(hashes[t]==verifiedHash){
 					UCASHT.innerText = "Verified U.CASH Converter"
 			} else {
@@ -271,6 +271,9 @@ async function createMarker(t) {
 			telegramLink.innerText = "Chat on Telegram"
 			telegramLink.href = "https://t.me/" + telegram
 			infoNode.appendChild(telegramLink)
+			infoNode.appendChild(document.createElement("div"))
+			infoNode.appendChild(document.createElement("div"))
+
 
 			// let email = converters[t][10]
 			// var emailT = document.createElement("p")
@@ -281,6 +284,13 @@ async function createMarker(t) {
 			// var ensNameT = document.createElement("p")
 			// ensNameT.innerText = ensName
 			// infoNode.appendChild(ensNameT)
+
+			let mapsString = name + " " + street + " " + city
+			let mapsLink = document.createElement("a")
+			mapsLink.innerText = "View on Google Maps"
+			mapsLink.href = "https://www.google.com/maps/search/?api=1&query=" + mapsString
+			infoNode.appendChild(mapsLink)
+
 
 
 			var loadFeeText
@@ -295,6 +305,7 @@ async function createMarker(t) {
 			markers.push(marker)
 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.open(map,markers[t]);
+				openNav()
 				populateSidePanel(t)
 			});
 
@@ -350,7 +361,6 @@ document.getElementById("mySidenav").innerHTML = ""
 	var tz = split1[1]
 
 	console.log(hS)
-	console.log("Reras")
 	switch(hS){
 		case "Closed":
 			availability = "Closed"
@@ -459,4 +469,18 @@ function collapseHours(HoursElement,content){
     }
   });
 
+}
+
+
+/* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+function openNav() {
+	console.log("abc")
+  document.getElementById("mySidenav").style.width = "250px";
+  document.getElementById("map").style.marginLeft = "250px";
+}
+
+/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("map").style.marginLeft = "0";
 }

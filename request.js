@@ -1,4 +1,4 @@
-var server = "http://localhost:3000"
+var server = "https://gentle-peak-60588.herokuapp.com"
 
 async function testRequest(from, to) {
 
