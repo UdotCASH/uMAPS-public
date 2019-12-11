@@ -8,8 +8,13 @@ async function testRequest(from, to) {
 }
 
 async function fetchConverters(){
+
   var xhttp = await createCORSRequest('GET', server + "/converters");
-  await sendRequest(xhttp,"converters")
+  await sendRequest(xhttp,"converters",750)
+  if(converters!=null){
+  console.log("got converters")
+}
+
   return new Promise(function(resolve) {
 
 		setTimeout(resolve, 0);
@@ -21,7 +26,10 @@ async function fetchConverters(){
 async function fetchCoords(){
 
   var xhttp = await createCORSRequest('GET', server + "/coords");
-  await sendRequest(xhttp,"coords")
+  await sendRequest(xhttp,"coords",200)
+  if(converters!=null){
+  console.log("got coords")
+}
   return new Promise(function(resolve) {
 
 		setTimeout(resolve, 0);
@@ -32,8 +40,10 @@ async function fetchCoords(){
 async function fetchHashes(){
 
   var xhttp = await createCORSRequest('GET', server + "/hashes");
-  await sendRequest(xhttp,"hashes")
-  return new Promise(function(resolve) {
+  await sendRequest(xhttp,"hashes",200)
+  if(converters!=null){
+  console.log("got hashes")
+}  return new Promise(function(resolve) {
 
     setTimeout(resolve, 0);
 
@@ -41,11 +51,10 @@ async function fetchHashes(){
     });
 }
 
-async function sendRequest(xhttp,requestType){
+async function sendRequest(xhttp,requestType,data){
   if (!xhttp) {
     throw new Error('CORS not supported');
   }
-
   xhttp.onload = function() {
    var responseText = xhttp.responseText;
    if(requestType=="converters"){
@@ -65,12 +74,25 @@ async function sendRequest(xhttp,requestType){
 
     var data = {fname:"asdfasdf",lname:"assdo"}
     xhttp.send(data);
-
     return new Promise(function(resolve) {
 
-      setTimeout(resolve, 200);
-
-      });
+      (function waitForData(){
+        let data;
+        if(requestType=="converters"){
+        data = converters
+      } else if(requestType=="coords"){
+        data = coords
+      } else if(requestType=="hashes"){
+        data = hashes
+      }
+          if (data!=null) return resolve();
+          console.log(requestType)
+          setTimeout(waitForData, 30);
+      })();
+      // setTimeout(resolve,2000);
+      //
+      // });
+})
 }
 
 

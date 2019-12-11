@@ -16,8 +16,12 @@ body {
 }
 
 .sidepanel a {
+  padding: 8px 8px 8px 32px;
   text-decoration: none;
+  font-size: 25px;
   color: #cc9933;
+  display: block;
+  transition: 0.3s;
   font-family: "Comic Sans MS"
 }
 
@@ -32,22 +36,6 @@ body {
   font-size: 36px;
 }
 
-.converterName {
-  color: #cc9933;
-  font-size: 36px;
-}
-
-.converterInfo {
-  color: #cc9933;
-  font-size: 16px;
-  display: inline;
-  padding-left: 5px;
-  padding-bottom:10px;
-  font-family: "Comic Sans MS";
-}
-
-
-
 .openbtn {
   font-size: 20px;
   cursor: pointer;
@@ -59,17 +47,4 @@ body {
 
 .openbtn:hover {
   background-color:#444;
-}
-
-.fas {
-  font-size:24px;
-  display: inline;
-  white-space: nowrap;
-  color: #cc9933;
-  position: relative;
-  margin-right: 10px;
-  margin-left: 10px;
-  margin-bottom: 25px;
-  fill: #fff;
-  padding-top: 10px
 }
